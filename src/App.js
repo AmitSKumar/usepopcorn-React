@@ -59,13 +59,16 @@ export default function App() {
         <NumResults movies={movies} />
       </NavBar>
       <Main movies={movies}>
+        {/* explic prop its used in React Router */}
+        <Box element={<MovieList movies={movies} />} />
+        {/* implicit prop 
         <Box movies={movies}>
           <MovieList movies={movies} />
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
           <WatchedMoviesList watched={watched} />
-        </Box>
+        </Box> */}
       </Main>
     </>
   );
@@ -109,7 +112,7 @@ function NumResults({ movies }) {
 function Main({ children }) {
   return <main className="main">{children}</main>;
 }
-function Box({ children }) {
+function Box({ element }) {
   const [isOpen1, setIsOpen1] = useState(true);
   return (
     <div className="box">
@@ -119,7 +122,7 @@ function Box({ children }) {
       >
         {isOpen1 ? "–" : "+"}
       </button>
-      {isOpen1 && children}
+      {isOpen1 && element}
     </div>
   );
 }
@@ -206,7 +209,7 @@ function WatchedMoviesList({ watched }) {
   return (
     <ul className="list">
       {watched.map((movie) => (
-        <WatchedMovies movie={movie} />
+        <WatchedMovies movie={movie} key={movie.imdbID} />
       ))}
     </ul>
   );
