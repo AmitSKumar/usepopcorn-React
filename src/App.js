@@ -59,16 +59,13 @@ export default function App() {
         <NumResults movies={movies} />
       </NavBar>
       <Main movies={movies}>
-        {/* explic prop its used in React Router */}
-        <Box element={<MovieList movies={movies} />} />
-        {/* implicit prop 
         <Box movies={movies}>
           <MovieList movies={movies} />
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
           <WatchedMoviesList watched={watched} />
-        </Box> */}
+        </Box>
       </Main>
     </>
   );
@@ -112,7 +109,7 @@ function NumResults({ movies }) {
 function Main({ children }) {
   return <main className="main">{children}</main>;
 }
-function Box({ element }) {
+function Box({ children }) {
   const [isOpen1, setIsOpen1] = useState(true);
   return (
     <div className="box">
@@ -122,7 +119,7 @@ function Box({ element }) {
       >
         {isOpen1 ? "–" : "+"}
       </button>
-      {isOpen1 && element}
+      {isOpen1 && children}
     </div>
   );
 }
