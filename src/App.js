@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import StarRating from "./StarRating";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -65,6 +65,7 @@ export default function App() {
         <Box>
           <WatchedSummary watched={watched} />
           <WatchedMoviesList watched={watched} />
+          <StarRatin />
         </Box>
       </Main>
     </>
@@ -231,5 +232,14 @@ function WatchedMovies({ movie }) {
         </p>
       </div>
     </li>
+  );
+}
+function StarRatin() {
+  const [movieRating, setMovieRating] = useState(0);
+  return (
+    <div>
+      <StarRating maxRating={10} setMovieRating={setMovieRating} size={30} />
+      <p>This movie was rated {movieRating} stars</p>
+    </div>
   );
 }
