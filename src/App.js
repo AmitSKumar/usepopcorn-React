@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import StarRating from "./StarRating";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -60,8 +61,8 @@ export default function App() {
 
   //doesn't return anything its contains code which cause side effect
   //first argument is function nd 2nd dependency array
-  function handleSelectMovie(moviedId) {
-    setSelectedId(moviedId);
+  function handleSelectMovie(id) {
+    setSelectedId((selectedId) => (selectedId === id ? null : id));
   }
   function handleCloseMovie() {
     setSelectedId(null);
@@ -238,9 +239,55 @@ function Movie({ movie, OnSelectMovie }) {
   );
 }
 function MovieDetails({ selectedId, onCloseMovie }) {
+  const [movie, setMovie] = useState({});
+  const {
+    Title: title,
+    Year: year,
+    Poster: poster,
+    Runtime: runtime,
+    imdbRating: imdbRating,
+    Plot: plot,
+    Released: released,
+    Actors: actors,
+    Director: director,
+    Genre: genre,
+  } = movie;
+  console.log(title, year);
+  useEffect(function () {
+    async function getMovieDetails() {
+      const res = await fetch(
+        `https://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+      );
+      const data = await res.json();
+      setMovie(data);
+    }
+    getMovieDetails();
+  }, []);
   return (
-    <div className="details">
-      <button></button>
+    <div className="details" key={movie.imdbID}>
+      <header>
+        <img src={poster} alt={`poster of ${movie}`} />
+        <div className="details-overview">
+          <h2>{title}</h2>
+          <p>
+            {released} &bull; {runtime}
+          </p>
+          <p>{genre}</p>
+          <p>
+            <span>⭐️</span>
+            {imdbRating} imdb Rating
+          </p>
+        </div>
+        <button onClick={onCloseMovie}>&larr;</button>
+      </header>
+      <section>
+        <StarRating maxRating={10} size={24} />
+        <p>
+          <em>{plot}</em>
+        </p>
+        <p>Starring {actors}</p>
+        <p>Directed by {director}</p>
+      </section>
       {selectedId}
     </div>
   );
