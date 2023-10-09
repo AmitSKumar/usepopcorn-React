@@ -87,8 +87,6 @@ export default function App() {
           const data = await res.json();
           if (data.Response === "False") throw new Error("Movie not found");
           setMovies(() => data.Search);
-
-          console.log(movies);
         } catch (err) {
           SetError(err.message);
         } finally {
@@ -257,7 +255,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedId
   )?.userRating;
-  console.log(movie);
   const {
     Title: title,
     Year: year,
@@ -270,7 +267,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     Director: director,
     Genre: genre,
   } = movie;
-  console.log(title, year);
   function handleAdd() {
     const newMovie = {
       imdbID: selectedId,
@@ -281,7 +277,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       runtime: Number(runtime.split("").at(0)),
       userRating,
     };
-    console.log(newMovie);
     onAddWatched(newMovie);
     onCloseMovie();
   }
@@ -300,7 +295,11 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     },
     [selectedId]
   );
-
+  // side effect to interact with extenal world or browser
+  useEffect(() => {
+    if (!title) return;
+    document.title = `Movie | ${title}`;
+  }, [title]);
   return (
     <div className="details">
       {isLoading ? (
@@ -349,7 +348,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
             <p>Starring {actors}</p>
             <p>Directed by {director}</p>
           </section>
-          {selectedId}
         </>
       )}
     </div>
