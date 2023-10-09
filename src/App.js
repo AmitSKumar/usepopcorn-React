@@ -67,6 +67,9 @@ export default function App() {
   function handleCloseMovie() {
     setSelectedId(null);
   }
+  function handleWatched(movie) {
+    setWatched((watched) => [...watched, movie]);
+  }
   useEffect(
     function () {
       async function fetchMovies() {
@@ -119,6 +122,7 @@ export default function App() {
             <MovieDetails
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
+              onAddWatched={handleWatched}
             />
           ) : (
             <>
@@ -238,9 +242,10 @@ function Movie({ movie, OnSelectMovie }) {
     </li>
   );
 }
-function MovieDetails({ selectedId, onCloseMovie }) {
+function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
   const [movie, setMovie] = useState({});
   const [isLoading, SetIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState("");
   const {
     Title: title,
     Year: year,
@@ -254,6 +259,20 @@ function MovieDetails({ selectedId, onCloseMovie }) {
     Genre: genre,
   } = movie;
   console.log(title, year);
+  function handleAdd() {
+    const newMovie = {
+      imdbID: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split("").at(0)),
+      userRating,
+    };
+    console.log(newMovie);
+    onAddWatched(newMovie);
+    onCloseMovie();
+  }
   useEffect(
     function () {
       async function getMovieDetails() {
@@ -269,6 +288,7 @@ function MovieDetails({ selectedId, onCloseMovie }) {
     },
     [selectedId]
   );
+
   return (
     <div className="details">
       {isLoading ? (
@@ -291,7 +311,17 @@ function MovieDetails({ selectedId, onCloseMovie }) {
             <button onClick={onCloseMovie}>&larr;</button>
           </header>
           <section>
-            <StarRating maxRating={10} size={24} />
+            <StarRating
+              maxRating={10}
+              size={24}
+              setMovieRating={setUserRating}
+            />
+            {userRating > 0 && (
+              <button className="btn-add" onClick={handleAdd}>
+                + Add to List
+              </button>
+            )}
+
             <p>
               <em>{plot}</em>
             </p>
