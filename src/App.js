@@ -75,20 +75,26 @@ export default function App() {
   }
   useEffect(
     function () {
+      //AbortController is browser Api
+      const controller = new AbortController();
       async function fetchMovies() {
         try {
           SetIsLoading(true);
           // always we start fetching data we should reset the error
           SetError("");
           const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: controller.signal }
           );
           if (!res.ok) throw new Error("there is no internet connection");
           const data = await res.json();
           if (data.Response === "False") throw new Error("Movie not found");
           setMovies(() => data.Search);
+          SetError("");
         } catch (err) {
-          SetError(err.message);
+          if (err.name !== "AbortError") {
+            SetError(err.message);
+          }
         } finally {
           SetIsLoading(false);
         }
@@ -99,6 +105,9 @@ export default function App() {
         return;
       }
       fetchMovies();
+      return function () {
+        controller.abort();
+      };
     },
     [query]
   );
