@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StarRating from "./StarRating";
 
 const average = (arr) =>
@@ -151,10 +151,20 @@ function Logo() {
 function Search({ onSearch, query }) {
   //focus on initial render on search tab
   // we will use effect to interact with browser/external environment
+  //its not prefferd way because in react everything should be decalarative
+  // useEffect(function () {
+  //   const el = document.querySelector(".search");
+  //   el.focus();
+  // }, []);
+  //using ref we can achieve above
+  //declare useref
+  const inputEl = useRef(null);
+  // usage
   useEffect(function () {
-    const el = document.querySelector(".search");
-    el.focus();
+    inputEl.current.focus();
+    console.log(inputEl);
   }, []);
+
   return (
     <input
       className="search"
@@ -162,6 +172,7 @@ function Search({ onSearch, query }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => onSearch(e.target.value)}
+      ref={inputEl}
     />
   );
 }
