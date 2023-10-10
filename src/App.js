@@ -23,6 +23,11 @@ export default function App() {
   }
   function handleWatched(movie) {
     setWatched((watched) => [...watched, movie]);
+    //add to local storage, we store  key as string and value also string
+    // we cannot add  like setItem('watched',watched) beacause of stale state
+    // value of watched state is not available/update now so use callback
+    //we have to convert value ((watched) => [...watched, movie]) to string
+    localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   }
   function handleDeletWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
