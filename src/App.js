@@ -27,12 +27,19 @@ export default function App() {
     // we cannot add  like setItem('watched',watched) beacause of stale state
     // value of watched state is not available/update now so use callback
     //we have to convert value ((watched) => [...watched, movie]) to string
-    localStorage.setItem("watched", JSON.stringify([...watched, movie]));
+    //localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   }
   function handleDeletWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
 
+  //add to local storage using effect
+  useEffect(
+    function () {
+      localStorage.setItem("watched", JSON.stringify(watched));
+    },
+    [watched]
+  );
   useEffect(
     function () {
       //AbortController is browser Api
