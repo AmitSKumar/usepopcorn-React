@@ -8,10 +8,16 @@ const KEY = "8a81dbe2";
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  //const [watched, setWatched] = useState([]);
   const [isLoading, SetIsLoading] = useState(false);
   const [error, SetError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+  // we can pass the callback function to intial value of state
+  const [watched, setWatched] = useState(function () {
+    // we need to parse because we will get string value
+    const storedValue = localStorage.getItem("watched");
+    return JSON.parse(storedValue);
+  });
 
   //doesn't return anything its contains code which cause side effect
   //first argument is function nd 2nd dependency array
@@ -34,6 +40,8 @@ export default function App() {
   }
 
   //add to local storage using effect
+  //its sychronised with local storage
+  //when we delete movie its gets updated
   useEffect(
     function () {
       localStorage.setItem("watched", JSON.stringify(watched));
