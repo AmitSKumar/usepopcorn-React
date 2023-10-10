@@ -149,6 +149,12 @@ function Logo() {
   );
 }
 function Search({ onSearch, query }) {
+  //focus on initial render on search tab
+  // we will use effect to interact with browser/external environment
+  useEffect(function () {
+    const el = document.querySelector(".search");
+    el.focus();
+  }, []);
   return (
     <input
       className="search"
