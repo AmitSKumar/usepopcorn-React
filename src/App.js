@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -10,12 +11,12 @@ export default function App() {
   const [query, setQuery] = useState("");
 
   const [selectedId, setSelectedId] = useState(null);
-  // we can pass the callback function to intial value of state
-  const [watched, setWatched] = useState(function () {
-    // we need to parse because we will get string value
-    const storedValue = localStorage.getItem("watched");
-    return JSON.parse(storedValue);
-  });
+  // // we can pass the callback function to intial value of state
+  // const [watched, setWatched] = useState(function () {
+  //   // we need to parse because we will get string value
+  //   const storedValue = localStorage.getItem("watched");
+  //   return JSON.parse(storedValue);
+  // });
 
   //doesn't return anything its contains code which cause side effect
   //first argument is function nd 2nd dependency array
@@ -40,14 +41,9 @@ export default function App() {
   //add to local storage using effect
   //its sychronised with local storage
   //when we delete movie its gets updated
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
-  const { movies, error, isLoading } = useMovies(query);
 
+  const { movies, error, isLoading } = useMovies(query);
+  const [watched, setWatched] = useLocalStorageState([], "watched");
   return (
     <>
       <NavBar>
