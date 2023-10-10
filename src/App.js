@@ -160,10 +160,20 @@ function Search({ onSearch, query }) {
   //declare useref
   const inputEl = useRef(null);
   // usage
-  useEffect(function () {
-    inputEl.current.focus();
-    console.log(inputEl);
-  }, []);
+  useEffect(
+    function () {
+      function callback(e) {
+        if (document.activeElement === inputEl.current) return;
+        if (e.code === "Enter") {
+          inputEl.current.focus();
+          onSearch("");
+        }
+      }
+      document.addEventListener("keydown", callback);
+      return () => document.addEventListener("keydown", callback);
+    },
+    [onSearch]
+  );
 
   return (
     <input
